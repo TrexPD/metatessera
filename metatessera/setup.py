@@ -16,6 +16,6 @@ setup(
     ],
     entry_points="""
     [console_scripts]
-    meta = metatessera_en-US:main
+    meta = metatessera_en_US:main
     """
 )
