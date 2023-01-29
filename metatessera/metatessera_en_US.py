@@ -1,10 +1,20 @@
 from time import ctime, strptime, strftime
+from support import extensions
+from hashs import hash_calculation
+from rich.panel import Panel
 from re import sub, findall
 from pathlib import Path
-from hashs import hash_calculation
 from rich import print
-from rich.panel import Panel
 import click
+
+
+
+APP_VERSION: str = '0.0.9 (2023-01-27)'
+
+@click.group()
+@click.version_option(APP_VERSION)
+def cli_app():
+    pass
 
 
 def amount_of_characters(text: str) -> int: 
@@ -28,29 +38,30 @@ def amount_of_numbers(text: str) -> int:
 
 def number_of_lines(file: str) -> int:
     with open(f"{file}", 'rt', encoding='utf-8') as archive:
-        lines = archive.readlines()
+        lines = archive.readlines(4096)
         return len(lines)
 
 
-@click.command()
+@cli_app.command()
 @click.argument('file', type=click.STRING, envvar='METAFILE')
-def main(file: str) -> str:
+def file(file: str) -> str:
+
     if Path(file).is_file():
-            file_path = Path(file)
-            created = strptime(ctime(file_path.stat().st_ctime))
-            modified = strptime(ctime(file_path.stat().st_mtime))
-            last_access = strptime(ctime(file_path.stat().st_atime))
-            try:
-                with open(file=file, mode='rt', encoding='utf-8') as archive:
-                    read_file: str = archive.read(1024)
-            except FileNotFoundError:
-                click.echo(f"The file {file} was not found!\n")
-            except UnicodeDecodeError:
-                click.echo('Unsupported file, run the command "meta --extensions" to see supported file types!\n')
-            except:
-                click.echo("Sorry, unknown error... :(\n")
-            else:
-                print(
+        file_path = Path(file)
+        created = strptime(ctime(file_path.stat().st_ctime))
+        modified = strptime(ctime(file_path.stat().st_mtime))
+        last_access = strptime(ctime(file_path.stat().st_atime))
+        try:
+            with open(file=file, mode='rt', encoding='utf-8') as archive:
+                read_file: str = archive.read(4096)
+        except FileNotFoundError:
+            click.echo(f"The file {file} was not found!\n")
+        except UnicodeDecodeError:
+            click.echo('Unsupported file, run the command "meta --extensions" to see supported file types!\n')
+        except:
+            click.echo("Sorry, unknown error... :(\n")
+        else:
+            print(
 Panel(f"""[yellow][bold]DETAILS:[/][/]
 
 [blue]File name              [/]           [white][b]: {file_path.stem}                              [/]
@@ -72,5 +83,8 @@ Panel(f"""[yellow][bold]DETAILS:[/][/]
     else:
         click.echo(f'The "{file}" is an incorrect path or a non-existent file!\n')
 
+
 if __name__ == '__main__':
-    main()
+    cli_app.add_command(file)
+    cli_app.add_command(extensions)
+    cli_app()
