@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='metatessera',
-    version='0.0.5',
+    version='0.0.9',
     license='BSD 3-Clause',
     author='Paulo Daniel',
     platforms=['Windows', 'Linux', 'BSD'],
@@ -12,10 +12,10 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'click', 'rich', 'hashlib'
+        'click', 'rich'
     ],
     entry_points="""
     [console_scripts]
-    meta = metatessera_en_US:main
+    meta = metatessera_en_US:cli_app
     """
 )
