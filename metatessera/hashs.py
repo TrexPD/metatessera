@@ -11,7 +11,7 @@ def hash_calculation(file_name: str) -> str:
         hash_sha384 = hashlib.sha384()
         hash_sha512 = hashlib.sha512()
         while True:
-            data: bytes = archive.read(1024)
+            data: bytes = archive.read(4096)
             if not data:
                 break
             hash_md5.update(data)
@@ -20,7 +20,7 @@ def hash_calculation(file_name: str) -> str:
             hash_sha256.update(data)
             hash_sha384.update(data)
             hash_sha512.update(data)
-        return Text(f"""
+        return str(Text(f"""
 [yellow][b]CHECKSUM:[/][/]
 
 [blue]MD5   [/]                            [white][b]: {hash_md5.hexdigest()}[/][/]
@@ -28,7 +28,7 @@ def hash_calculation(file_name: str) -> str:
 [blue]SHA224[/]                            [white][b]: {hash_sha224.hexdigest()}[/][/]
 [blue]SHA256[/]                            [white][b]: {hash_sha256.hexdigest()}[/][/]
 [blue]SHA384[/]                            [white][b]: {hash_sha384.hexdigest()}[/][/]
-[blue]SHA512[/]                            [white][b]: {hash_sha512.hexdigest()}[/][/]""")
+[blue]SHA512[/]                            [white][b]: {hash_sha512.hexdigest()}[/][/]"""))
 
 
 if __name__ in "__main__":
