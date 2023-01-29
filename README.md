@@ -21,6 +21,9 @@
 
 ```python setup.py install```
 
+or 
+
+```pip install --editable .```
 
 ### Use in practice:
 
